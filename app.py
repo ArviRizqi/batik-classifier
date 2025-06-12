@@ -37,13 +37,26 @@ CLASS_NAMES = [
     'batik-garutan', 'batik-sidoluhur', 'batik-sekar', 'batik-sogan'
 ]
 
+# Tambahan: input label asli
+true_label = st.selectbox("Pilih label sebenarnya (opsional):", ["(tidak dipilih)"] + CLASS_NAMES)
+
 uploaded_file = st.file_uploader("Unggah gambar batik", type=["jpg", "png", "jpeg"])
+# Prediksi
 if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
     st.image(image, caption="Gambar yang diunggah", use_container_width=True)
+
     img_tensor = transform(image).unsqueeze(0)
     with torch.no_grad():
         output = model(img_tensor)
         _, predicted = torch.max(output, 1)
-        prediction = CLASS_NAMES[predicted.item()]
+        class_idx = predicted.item()
+        prediction = CLASS_NAMES[class_idx]
         st.success(f"✅ Prediksi: **{prediction}**")
+
+        # Perbandingan prediksi dan label asli
+        if true_label != "(tidak dipilih)":
+            if prediction == true_label:
+                st.info("🎯 Prediksi **benar** 🎉")
+            else:
+                st.warning(f"❌ Prediksi **salah**. Label sebenarnya adalah **{true_label}**.")
