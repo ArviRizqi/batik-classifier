@@ -9,12 +9,14 @@ st.set_page_config(page_title="Klasifikasi Batik", layout="centered")
 st.title("🧵 Klasifikasi Batik Indonesia")
 st.write("Unggah gambar batik dan lihat jenisnya berdasarkan model klasifikasi PyTorch.")
 
+# GDrive & Path
+FILE_ID = "1TcwfUAOUvVCYXwfvKHc9F1UvEEMuaxw2"
 MODEL_PATH = "batik_model.pth"
-FILE_ID = "1TcwfUAOUvVCYXwfvKHc9F1UvEEMuaxw2"  # Ganti dengan ID Anda
+
+# Unduh model jika belum ada
 if not os.path.exists(MODEL_PATH):
-    with st.spinner("Mengunduh model..."):
-        url = f"https://drive.google.com/uc?id={FILE_ID}"
-        gdown.download(url, MODEL_PATH, quiet=False)
+    url = f"https://drive.google.com/uc?id={FILE_ID}"
+    gdown.download(url, MODEL_PATH, quiet=False)
 
 # Load model
 @st.cache_resource
